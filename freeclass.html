@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Fitness Chatbot | TY Gym</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Oswald', sans-serif;
+            background: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1740&q=80') no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            background-color: rgba(0, 0, 0, 0.85);
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-header {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #ffc107;
+        }
+
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #666;
+            padding-bottom: 15px;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .user-message {
+            background-color: #007bff;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .bot-message {
+            background-color: #6c757d;
+            color: white;
+            align-self: flex-start;
+        }
+
+        .input-area {
+            display: flex;
+        }
+
+        #age-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            font-size: 1rem;
+        }
+
+        #send-button {
+            background-color: #ffc107;
+            color: black;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+    </style>
+    
+</head>
+<body>
+
+<div class="chat-container">
+    <h2 class="chat-header">Fitness Chatbot</h2>
+    <div class="chat-messages" id="chat-messages">
+        <div class="message bot-message">Hello! Please enter your age to get exercise recommendations.</div>
+    </div>
+    <div class="input-area">
+        <input type="number" id="age-input" placeholder="Enter your age" />
+        <button id="send-button">Send</button>
+    </div>
+</div>
+
+
+
+
+
+
+<script>
+    const chatMessages = document.getElementById('chat-messages');
+    const ageInput = document.getElementById('age-input');
+    const sendButton = document.getElementById('send-button');
+
+    sendButton.addEventListener('click', () => {
+        const age = ageInput.value;
+        if (age) {
+            addUserMessage(`My age is ${age}`);
+            ageInput.value = '';
+            getExerciseRecommendation(age);
+        }
+    });
+
+    ageInput.addEventListener('keypress', (event) => {
+      if (event.key === 'Enter') {
+        sendButton.click();
+      }
+    });
+
+    function addUserMessage(message) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message', 'user-message');
+        messageElement.textContent = message;
+        chatMessages.appendChild(messageElement);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function addBotMessage(message) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message', 'bot-message');
+        messageElement.textContent = message;
+        chatMessages.appendChild(messageElement);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function getExerciseRecommendation(age) {
+        let recommendation = '';
+        if (age < 18) {
+            recommendation = "Focus on bodyweight exercises, sports, and flexibility training.";
+        } else if (age >= 18 && age < 60) {
+            recommendation = "A mix of cardio, strength training, and flexibility exercises is recommended.";
+        } else {
+            recommendation = "Gentle exercises like walking and chair yoga are beneficial.";
+        }
+        setTimeout(() => {
+            addBotMessage(recommendation);
+        }, 500);
+    }
+</script> 
+
+
+
+
+
+</body>
+</html>

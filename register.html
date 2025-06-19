@@ -1,0 +1,203 @@
+
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register | TY Gym</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Oswald', sans-serif;
+            background: url('https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=1740&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 90%;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ff0000;
+            font-size: 2.5rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 5px;
+            background-color: #333;
+            color: white;
+        }
+
+        input[readonly] {
+            background-color: #222;
+        }
+
+        input:focus,
+        select:focus {
+            outline: 2px solid #ff0000;
+        }
+
+        .btn {
+            background-color: #ff0000;
+            color: white;
+            padding: 12px;
+            margin-top: 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #cc0000;
+        }
+
+        #qr-section {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #qr-section img {
+            max-width: 200px;
+            border: 2px solid white;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Join B N M  Gym</h1>
+        <form id="registerForm" action="http://localhost:5000/submit-registration" method="POST" onsubmit="return redirectToSuccess()">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required />
+
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required />
+
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" required />
+
+            <label for="plan">Choose a Plan</label>
+            <select id="plan" name="plan" required onchange="updatePrice()">
+                <option value="">-- Select Plan --</option>
+                <option value="basic">Basic - ₹800/month</option>
+                <option value="standard">Standard - ₹1200/month</option>
+                <option value="premium">Premium - ₹1600/month</option>
+            </select>
+
+            <label for="start-date">Start Date</label>
+            <input type="date" id="start-date" name="start_date" required />
+
+            <label for="amount">Payment Amount (INR)</label>
+            <input type="text" id="amount" name="amount" readonly />
+
+            <div id="qr-section" style="display: none; margin-top: 20px; text-align: center;">
+              <p id="qr-text" style="margin-bottom: 10px; font-size: 1.1rem;"></p>
+              <img id="qr-image" src="./assets/qr.jpg" alt="Scan to Pay"
+                  style="max-width: 200px; border: 2px solid white; border-radius: 10px;">
+              <label for="utr" style="display:block; margin-top: 15px;">Enter UTR Number</label>
+              <input type="text" id="utr" name="utr" required placeholder="Enter UTR after payment" />
+          </div>
+          
+
+            <button type="submit" class="btn">Confirm & Register</button>
+        </form>
+    </div>
+
+    <script>
+        function updatePrice() {
+            const plan = document.getElementById("plan").value;
+            const amountField = document.getElementById("amount");
+            const qrSection = document.getElementById("qr-section");
+            const qrText = document.getElementById("qr-text");
+            const qrImage = document.getElementById("qr-image");
+
+            let price = "";
+
+            switch (plan) {
+                case "basic":
+                    price = "800";
+                    break;
+                case "standard":
+                    price = "1200";
+                    break;
+                case "premium":
+                    price = "1600";
+                    break;
+                default:
+                    price = "";
+            }
+
+            if (price !== "") {
+                amountField.value = `₹${price}`;
+                qrText.textContent = `Scan & Pay ₹${price} via UPI`;
+                qrImage.src = "./assets/qr.jpg"; // Assuming a single QR image
+                qrSection.style.display = "block";
+            } else {
+                amountField.value = "";
+                qrSection.style.display = "none";
+            }
+        }
+
+        function redirectToSuccess() {
+            const email = document.getElementById("email").value;
+            if (!email.includes('@')) {
+                alert("Please enter a valid email address with '@'");
+                return false; // Prevent form submission
+            } else {
+                window.location.href = "succesful.html"; // Redirect to successful.html
+                return false; // Prevent the default form submission
+            }
+        }
+    </script>
+
+</body>
+
+</html>
